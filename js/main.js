@@ -1,6 +1,6 @@
 var cargarPagina = function() {
   cargarPersonajes();
-
+  $(document).on("click", ".personaje", mostarDetallePersonaje);
 };
 
 var cargarPersonajes = function() {
@@ -25,8 +25,25 @@ var mostrarPersonajes = function (personajes) {
   // arreglo nativo de javascript por eso usamos forEach
   personajes.forEach(function (personaje) {
     var $li =$("<li/>");
+    $li.addClass("personaje");
+    $li.attr("data-url", personaje.homeworld);
     $li.text(personaje.name + "-" + personaje.height);
     $ul.append($li);
+  });
+};
+
+var plantillaPLaneta = "<h2>Planeta</h2>" +
+"<p><strong>__nombre__</strong></p>" +
+"<p><strong>__clima__</strong></p>";
+
+var mostarDetallePersonaje = function () {
+  var url = ($(this).data("url"));
+  var $planetaContenedor = $("#planeta");
+  $.getJSON(url, function (response) {
+    $planetaContenedor.html(
+      plantillaPLaneta.replace("__nombre__", response.name)
+        .replace("__clima__", response.climate)
+    );
   });
 };
 
